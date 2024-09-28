@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repo Metrics Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Repository Metrics Dashboard</h1>
+    <form id="repo-form">
+        <input type="text" id="repo" placeholder="Enter repository (owner/repo)" required>
+        <button type="submit">Get Metrics</button>
+    </form>
+    <div id="metrics-results"></div>
+
+    <script>
+        $('#repo-form').on('submit', function (event) {
+            event.preventDefault();
+            const repo = $('#repo').val();
+            $.ajax({
+                type: 'POST',
+                url: '/metrics',
+                contentType: 'application/json',
+                data: JSON.stringify({ repo: repo }),
+                success: function (data) {
+                    $('#metrics-results').html(`
+                        <h2>Metrics</h2>
+                        <ul>
+                            <li>PR Counts: Open - ${data.pr_counts.open}, Closed - ${data.pr_counts.closed}, Merged - ${data.pr_counts.merged}</li>
+                            <li>Issue Counts: Open - ${data.issue_counts.open}, Closed - ${data.issue_counts.closed}</li>
+                            <li>PR Response Time (seconds): ${data.pr_response_time}</li>
+                            <li>Average Merge Time (seconds): ${data.average_merge_time}</li>
+                            <li>Contributor Activity: ${JSON.stringify(data.contributor_activity)}</li>
+                            <li>Average Issue Resolution Time (seconds): ${data.issue_resolution_time}</li>
+                            <li>Code Churn: ${JSON.stringify(data.code_churn)}</li>
+                        </ul>
+                    `);
+                },
+                error: function (error) {
+                    $('#metrics-results').html(`<p>${error.responseJSON.error}</p>`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

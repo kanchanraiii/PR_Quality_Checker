@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Quality Check</title>
+</head>
+<body>
+    <h2>📝 PR Quality Check</h2>
+    <ul>
+        <li><strong>Merge Conflict Status:</strong> {{ merge_status }}</li>
+        <li><strong>PR Type:</strong> {{ ', '.join(pr_type) }}</li>
+        <li><strong>Spam Check:</strong> {{ spam_status }}</li>
+    </ul>
+
+    <h3>🔍 Cyclomatic Complexity Analysis:</h3>
+    <p>The following Python functions were analyzed for cyclomatic complexity:</p>
+    {{ cyclomatic_results }}
+
+    <h3>🔠 Language Detection</h3>
+    <p>The detected languages for each file:</p>
+    <ul>
+        {% for lang in language_detection %}
+            <li>{{ lang }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
